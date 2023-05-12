@@ -1,13 +1,14 @@
 const EventEmitter = require('events');
-const emitter = new EventEmitter();
 
 var url = 'http://myLogger.io/log';
 
-function log(message) {
+class Logger extends EventEmitter{
+    log(message) {
 
-    console.log(message);
-
-    emitter.emit('messageLogged', {id: 1, url: 'http://'});
+        console.log(message);
+    
+        this.emit('messageLogged', {id: 1, url: 'http://'});
+    }
 }
 
-module.exports = log;
+module.exports = Logger;
