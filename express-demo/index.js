@@ -1,18 +1,41 @@
+const startupDebugger = require('debug')('app:startup');
+const dbDebugger = require('debug')('app:db');
+const config = require('config');
+const helmet = require('helmet');
+const morgan = require('morgan');
 const Joi = require('joi');
+const logger = require('./logger');
+const authenticator = require('./authentication');
 const express = require('express');
 const app = express();
 
+app.set('view engine', 'pug'); // geen expliciete require nodig
+app.set('views', './views');   //default view dir
+
 // some middleware
 app.use(express.json());
+app.use(logger);
+app.use(authenticator);
+app.use(helmet());
+
+console.log(config.get('name'));
+
+if (app.get('env') === 'development') {
+    app.use(morgan('tiny'));
+    // console.log('Morgan enabled ...');
+    startupDebugger('Morgan enabled ...');
+}
+
+dbDebugger('connected to the Database ... ');
 
 const courses = [
-    { id: 1, name: 'cursus 1'},
+    { id: 1, name: 'cursus 1'}, 
     { id: 2, name: 'Marx voor beginners en Engels voor gevorderden.'},
     { id: 3, name: 'Omgaan met teleurstellingen'},
 ];
 
 app.get('/', (req, res) => {
-    res.send('Hello World!!!');
+    res.render('index', { title: 'my Express App', message: 'Hello' });
 });
 
 app.get('/api/courses', (req, res) => {

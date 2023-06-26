@@ -1,0 +1,6 @@
+{
+    "name": "Demo Express App - live mode",
+    "mail": {
+        "host": "live-mail-derver"
+    }
+}
