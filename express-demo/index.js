@@ -1,18 +1,18 @@
 const startupDebugger = require('debug')('app:startup');
 const dbDebugger = require('debug')('app:db');
-const config = require('config');
-const helmet = require('helmet');
-const morgan = require('morgan');
-const Joi = require('joi');
-const logger = require('./middleware/logger');
+const config = require('config'); // config
+const helmet = require('helmet'); // secure http headers
+const morgan = require('morgan'); // logger
+const Joi = require('joi');       // validator
+const logger = require('./middleware/logger');  
 const courses = require('./routes/courses');
 const defaultroute = require('./routes/default');
 const authenticator = require('./authentication');
-const express = require('express');
+const express = require('express'); 
 const app = express();
 
-app.set('view engine', 'pug'); // geen expliciete require nodig
-app.set('views', './views');   //default view dir
+app.set('view engine', 'pug');  // geen expliciete require nodig
+app.set('views', './views');    //default view dir
 
 // some middleware
 app.use(express.json());
@@ -20,6 +20,7 @@ app.use(logger);
 app.use(authenticator);
 app.use(helmet());
 
+// routers
 app.use('/api/courses', courses);
 app.use('/', defaultroute);
 
