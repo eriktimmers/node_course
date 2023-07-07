@@ -1,10 +1,19 @@
 console.log('before');
 
-getUser(1)
-    .then(usr => getRepositories(usr.githubUser))
-    .then(repos => getCommits(repos[0]))
-    .then(commits => displayCommits(commits))
-    .catch(err => console.log(err.message));
+// getUser(1)
+//     .then(usr => getRepositories(usr.githubUser))
+//     .then(repos => getCommits(repos[0]))
+//     .then(commits => displayCommits(commits))
+//     .catch(err => console.log(err.message));
+
+async function printCommits() {
+    console.log('Starting ... ')
+    const user = await getUser(1);
+    const repos = await getRepositories(user.githubUser);
+    const commits = await getCommits(repos[0]);
+    console.log(commits);
+}
+printCommits();
 
 console.log('after');
 
