@@ -14,7 +14,10 @@ const courseSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: ['web', 'mobile', 'networ']
+        enum: ['web', 'mobile', 'network'],
+        lowercase: true,
+        // uppercase: true,
+        trim: true
     },
     author: String,
     tags: {
@@ -36,7 +39,11 @@ const courseSchema = new mongoose.Schema({
     isPublished: Boolean,
     price: {
         type: Number,
-        required: function() { return this.isPublished }
+        required: function() { return this.isPublished },
+        min: 10,
+        max: 200,
+        get: v => Math.round(v),
+        set:  v => Math.round(v)
     }
 });
 
@@ -45,11 +52,11 @@ const Course = mongoose.model('Course', courseSchema); // create Class
 async function createCourse() {
     const course = new Course({
         name: 'Angular Course',
-        category: '-',
+        category: 'Web',
         author: 'Mosh',
-        tags: null,
+        tags: ['frontend'],
         isPublished: true,
-        price: 15
+        price: 15.8
     });
 
     try {
@@ -69,13 +76,14 @@ async function getCourses() {
 
 
     const courses = await Course
-        .find({ author: 'Mosh', isPublished: true })
-        .skip((pageNumber - 1) * pageSize)
-        .limit(10)
-        .sort({ name: 1 })
-        .count();
+        // .find({ author: 'Mosh', isPublished: true })
+        .find({ _id: '64d34f8048a6412bcd960e56' })
+        // .skip((pageNumber - 1) * pageSize)
+        // .limit(pageSize)
+        .sort({ name: 1 });
+        // .count()
         // .select({ name: 1, tags: 1 })
-    console.log(courses);
+    console.log(courses[0].price);
 }
 
 
@@ -122,4 +130,5 @@ async function removeCourse(id) {
 }
 
 // removeCourse('64c6502d16e90b9802fdff41');
-createCourse();
+getCourses();
+//createCourse();
