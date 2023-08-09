@@ -5,11 +5,39 @@ mongoose.connect('mongodb://localhost/playground')
     .catch(err => console.error('Could not connect to MongoDB!', err));
 
 const courseSchema = new mongoose.Schema({
-    name: String,
+    name: { 
+        type: String, 
+        required: true,
+        minlength: 5,
+        maxlengthe: 25
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ['web', 'mobile', 'networ']
+    },
     author: String,
-    tags: [ String ],
+    tags: {
+        type: Array,
+        validate: {
+            validator: async function(v) {
+                return new Promise(
+                    function(resolve, reject) {
+                        setTimeout(() => {
+                            resolve(v && v.length > 0);
+                        }, 2000);
+                    }
+                );
+            },
+            message: 'A course should at least have one tag,'
+        }
+    },
     date: { type: Date, default: Date.now },
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: {
+        type: Number,
+        required: function() { return this.isPublished }
+    }
 });
 
 const Course = mongoose.model('Course', courseSchema); // create Class
@@ -17,13 +45,22 @@ const Course = mongoose.model('Course', courseSchema); // create Class
 async function createCourse() {
     const course = new Course({
         name: 'Angular Course',
+        category: '-',
         author: 'Mosh',
-        tags: ['node', 'frontend'],
-        isPublished: true
+        tags: null,
+        isPublished: true,
+        price: 15
     });
 
-    const result = await course.save();
-    console.log(result);
+    try {
+        const result = await course.save();
+        console.log(result);
+    }
+    catch (ex) {
+        for (field in ex.errors)
+            console.log(ex.errors[field].message);
+    }
+
 }
 
 async function getCourses() {
@@ -84,4 +121,5 @@ async function removeCourse(id) {
     console.log(result);
 }
 
-removeCourse('64b7d5fc1a63424739680dd8');
+// removeCourse('64c6502d16e90b9802fdff41');
+createCourse();
