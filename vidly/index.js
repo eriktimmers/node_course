@@ -1,9 +1,12 @@
+const Joi = require('joi');
+Joi.objectId = require('joi-objectid')(Joi);
 const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 const genreRouter = require('./routes/genres');
 const customerRouter = require('./routes/customers');
 const movieRouter = require('./routes/movies');
+const rentalRouter = require('./routes/rentals');
 
 mongoose.connect('mongodb://localhost/vidly')
     .then(() => console.log('Connected to MongoDB...'))
@@ -16,6 +19,7 @@ app.use(express.json());
 app.use('/api/genres', genreRouter);
 app.use('/api/customers', customerRouter);
 app.use('/api/movies', movieRouter);
+app.use('/api/rentals', rentalRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`listening on port ${port}...`));
