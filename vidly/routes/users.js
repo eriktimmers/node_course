@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const {User, validate} = require('../models/user');
 const mongoose = require('mongoose');
 const express = require('express');
@@ -16,24 +17,13 @@ router.post('/', async (req, res) => {
 
     let password = req.body.password;
 
-    const user = new User({
-        username: req.body.username,
-        email: req.body.email
-    });
+    const user = new User(_.pick(req.body, ['username', 'email']));
 
-    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-        // hash the password using our new salt
-        bcrypt.hash(password, salt, function(err, hash) {
-            // override the cleartext password with the hashed one
-            user.password = hash;
-            saveTheUser(res, user);
-        });
-    });
-});
-
-async function saveTheUser(res, user) {
+    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    const hash = await bcrypt.hash(password, salt);
+    user.password = hash;
     await user.save();
-    res.send(user);
-}
+    res.send(_.pick(user, ['_id', 'username', 'email']));
+});
 
 module.exports = router;

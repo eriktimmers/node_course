@@ -8,6 +8,7 @@ const customerRouter = require('./routes/customers');
 const movieRouter = require('./routes/movies');
 const rentalRouter = require('./routes/rentals');
 const userRouter = require('./routes/users');
+const authRouter = require('./routes/auth');
 
 mongoose.connect('mongodb://localhost/vidly')
     .then(() => console.log('Connected to MongoDB...'))
@@ -22,6 +23,7 @@ app.use('/api/customers', customerRouter);
 app.use('/api/movies', movieRouter);
 app.use('/api/rentals', rentalRouter);
 app.use('/api/users', userRouter);
+app.use('/api/auth', authRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`listening on port ${port}...`));
