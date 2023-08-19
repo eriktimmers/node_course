@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { Customer } = require("../models/customer");
+const jwt = require("jsonwebtoken");
+const config = require("config");
 const SALT_WORK_FACTOR = 10;
 
 const router = express.Router();
@@ -23,7 +25,9 @@ router.post('/', async (req, res) => {
     const hash = await bcrypt.hash(password, salt);
     user.password = hash;
     await user.save();
-    res.send(_.pick(user, ['_id', 'username', 'email']));
+
+    const token = user.generateAuthToken();
+    res.header('x-auth-token', token).send(_.pick(user, ['_id', 'username', 'email']));
 });
 
 module.exports = router;
