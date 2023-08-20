@@ -6,18 +6,26 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/', async (req, res) => {
-    const genre = await Genre.find().sort('name');
-    if (!genre) return res.status(404).send('Genre not Found.');
-    res.send(genre);
+router.get('/', async (req, res, next) => {
+    try {
+        const genre = await Genre.find().sort('name');
+        if (!genre) return res.status(404).send('Genre not Found.');
+        res.send(genre);
+    }
+    catch (ex) {
+        next(ex);
+    }
 });
 
-router.get('/:id', async (req, res) => {
-    const genre = await Genre.findById(req.params.id);
-    console.log(genre);
-
-    if (!genre) return res.status(404).send('No Genres found.');
-    res.send(genre);
+router.get('/:id', async (req, res, next) => {
+    try {
+        const genre = await Genre.findById(req.params.id);
+        if (!genre) return res.status(404).send('No Genres found.');
+        res.send(genre);
+    }
+    catch (ex) {
+        next(ex);
+    }
 });
 
 router.post('/', auth, async (req, res) => {

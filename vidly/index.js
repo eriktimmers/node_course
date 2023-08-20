@@ -1,3 +1,4 @@
+const error = require('middleware/error')
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const Joi = require('joi');
@@ -32,6 +33,9 @@ app.use('/api/movies', movieRouter);
 app.use('/api/rentals', rentalRouter);
 app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
+// Error Handling middleware
+app.use(error);
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`listening on port ${port}...`));
