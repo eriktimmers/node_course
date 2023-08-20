@@ -1,3 +1,4 @@
+require('express-async-errors');
 const error = require('./middleware/error')
 const jwt = require('jsonwebtoken');
 const config = require('config');

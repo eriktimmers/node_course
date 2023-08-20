@@ -1,4 +1,3 @@
-const asyncMiddleware = require('../middleware/async');
 const admin = require('../middleware/admin');
 const auth = require('../middleware/auth');
 const {Genre, genreSchema, validate} = require('../models/genre');
@@ -7,17 +6,17 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/', asyncMiddleware(async (req, res) => {
+router.get('/', async (req, res) => {
     const genre = await Genre.find().sort('name');
     if (!genre) return res.status(404).send('Genre not Found.');
     res.send(genre);
-}));
+});
 
-router.get('/:id', asyncMiddleware(async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
     const genre = await Genre.findById(req.params.id);
     if (!genre) return res.status(404).send('No Genres found.');
     res.send(genre);
-}));
+});
 
 router.post('/', auth, async (req, res) => {
     console.log(req.body);
