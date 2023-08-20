@@ -6,9 +6,15 @@ const bcrypt = require('bcrypt');
 const { Customer } = require("../models/customer");
 const jwt = require("jsonwebtoken");
 const config = require("config");
+const auth = require("../middleware/auth");
 const SALT_WORK_FACTOR = 10;
 
 const router = express.Router();
+
+router.get('/me', auth, async (req, res) => {
+    const user = await User.findById(req.user._id).select('-password');
+    res.send(user);
+});
 
 router.post('/', async (req, res) => {
     const { error } = validate(req.body);
