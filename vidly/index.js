@@ -1,4 +1,4 @@
-const error = require('middleware/error')
+const error = require('./middleware/error')
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const Joi = require('joi');
