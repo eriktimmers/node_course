@@ -7,7 +7,6 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-    // throw new Error('Could not, will not');
     const genre = await Genre.find().sort('name');
     if (!genre) return res.status(404).send('Genre not Found.');
     res.send(genre);

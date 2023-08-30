@@ -16,17 +16,6 @@ const rentalRouter = require('./routes/rentals');
 const userRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
 
-// subscribe
-// process.on('uncaughtException', (ex) => {
-//     winston.error(ex.message, ex);
-//     process.exit(1);
-// });
-//
-// process.on('unhandledRejection', (ex) => {
-//     winston.error(ex.message, ex);
-//     process.exit(1);
-// });
-
 winston.handleExceptions(new winston.transports.File({ filename: 'uncaught.log' }));
 
 winston.add(new winston.transports.File({ filename: 'logfile.log' }));
@@ -36,11 +25,6 @@ winston.add(
         level: 'info'
     })
 );
-
-// throw new Error('something vague happening');
-const p = Promise.reject(new Error('Something failed miserably'));
-p.then(() => console.log('Done'));// ß.catch(() => console.log('Fail')); // no catch
-
 
 if (!config.get('jwtPrivateKey')) {
     console.log('FATAL: jwt private key is not defined');
@@ -63,7 +47,6 @@ app.use('/api/users', userRouter);
 app.use('/api/auth', authRouter);
 // Error Handling middleware
 app.use(error);
-
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`listening on port ${port}...`));
